@@ -1,4 +1,4 @@
-(ns clj-nav-obj-splitter (:use clojure.test clojure.string))
+(ns nav.text.split (:use clojure.test clojure.string))
 
 ;;(clojure.test/is (= 4 (+ 2 2)))
 ;;(lower-case "TEST")
