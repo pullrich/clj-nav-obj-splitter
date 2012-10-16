@@ -15,7 +15,7 @@
 		(= type "Dataport") 4
 		(= type "Codeunit") 5
 		(= type "XMLport") 6
-		(= type "MenuSuite") 7)
+		(= type "MenuSuite") 7
 		(= type "Page") 8))
 
 (defn parse-first-line [line]
