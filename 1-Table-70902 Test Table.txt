@@ -1,0 +1,42 @@
+OBJECT Table 70902 Test Table (48)
+{
+  OBJECT-PROPERTIES
+  {
+    Date=03.07.12;
+    Time=12:55:12;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;Id_fBgt             ;BigInteger    ;AutoIncrement=Yes }
+    { 2   ;   ;Start_fDtt          ;DateTime       }
+    { 3   ;   ;End_fDtt            ;DateTime       }
+  }
+  KEYS
+  {
+    {    ;Id_fBgt                                 ;Clustered=Yes }
+    {    ;Start_fDtt                               }
+    {    ;End_fDtt                                 }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    PROCEDURE "Test_Procedure"@1000000009();
+    BEGIN
+    END;
+
+    BEGIN
+    {
+      Documentation Trigger
+    }
+    END.
+  }
+}
+
