@@ -19,7 +19,8 @@
     (= type "Page") 8))
 
 (defn parse-first-line [line]
-  (let [matches (re-find (re-pattern #"^(.+) (\d+) (.+)") line)
+  (let [first-line-format #"^OBJECT (.+) (\d+) (.+)"
+        matches (re-find (re-pattern first-line-format) line)
         type (nth matches 1)
         id (nth matches 2)
         name (nth matches 3)]
@@ -36,3 +37,4 @@
 (parse-first-line "Table 100 Test Table")
 (def objmeta (parse-first-line "Table 100 Test Table"))
 (make-single-file-name objmeta)
+(parse-first-line "OBJECT Table 70902 Test Table (48)")
