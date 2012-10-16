@@ -25,12 +25,14 @@
         name (nth matches 3)]
     {:type-id (type-id type) :type type :id id :name name}))
 
-(defn make-single-file-name [{type-id :type-id type :type id :id}]
-  "1-Table-100-Test Table")
+(defn make-single-file-name [object-metadata]
+  (let [type-id (:type-id object-metadata)
+        type (:type object-metadata)
+        id (:id object-metadata)
+        file-name (join "-" [type-id, type, id])]
+    (join [file-name ".txt"])))
 
-(defn make-single-file-name []
-  (+ "1" "test"))
 
-(join ["1" "test"])
-(join "-" ["1" "test"])
 (parse-first-line "Table 100 Test Table")
+(def objmeta (parse-first-line "Table 100 Test Table"))
+(make-single-file-name objmeta)
