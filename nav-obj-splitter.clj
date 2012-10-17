@@ -1,8 +1,10 @@
-(ns nav.big-object-text-file.split
+(ns nav.source.split
   (:use [clojure.test]
         [clojure.string :only [join]]))
 
-(defn type-id [type]
+(defn type-id
+  "Returns the NAV specific type id for the object type."
+  [type]
   (cond
     (= type "Table") 1
     (= type "Form") 2
@@ -13,7 +15,9 @@
     (= type "MenuSuite") 7
     (= type "Page") 8))
 
-(defn parse-first-line [line]
+(defn parse-first-line
+  "Parses meta data from the first line of the object source file."
+  [line]
   (let [first-line-format #"^OBJECT (.+) (\d+) (.+)"
         matches (re-find (re-pattern first-line-format) line)
         type (nth matches 1)
@@ -21,7 +25,9 @@
         name (nth matches 3)]
     {:type-id (type-id type) :type type :id id :name name}))
 
-(defn make-single-file-name [object-metadata]
+(defn make-single-file-name
+  "Returns a file name built from object meta data."
+  [object-metadata]
   (let [type-id (:type-id object-metadata)
         type (:type object-metadata)
         id (:id object-metadata)
