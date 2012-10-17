@@ -1,11 +1,6 @@
-(ns nav.text.split (:use clojure.test clojure.string))
-
-;;(clojure.test/is (= 4 (+ 2 2)))
-;;(lower-case "TEST")
-
-(re-find (re-pattern #"^(.+) (\d+) (.+)") "Table 100 Test Table")
-
-(re-find (re-pattern "^Table|Form|Report|Dataport|XMLport|Page|Codeunit") "Table 100 Test Table")
+(ns nav.big-object-text-file.split
+  (:use [clojure.test]
+        [clojure.string :only [join]]))
 
 (defn type-id [type]
   (cond
@@ -33,8 +28,9 @@
         file-name (join "-" [type-id, type, id])]
     (join [file-name ".txt"])))
 
-
-(parse-first-line "Table 100 Test Table")
-(def objmeta (parse-first-line "Table 100 Test Table"))
-(make-single-file-name objmeta)
-(parse-first-line "OBJECT Table 70902 Test Table (48)")
+; Some tests
+(def meta-data-example {:type-id 1 :type "Table" :id "70902" :name "Test Table (48)"})
+(def first-line-example "OBJECT Table 70902 Test Table (48)")
+(def meta-data-parsed (parse-first-line first-line-example))
+(is (= meta-data-example meta-data-parsed))
+(is (= "1-Table-70902.txt" (make-single-file-name meta-data-parsed)))
