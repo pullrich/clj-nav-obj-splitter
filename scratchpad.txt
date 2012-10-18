@@ -1,1 +1,2 @@
-﻿Move test functions to own file.
+﻿- Make test fn's not dependend on top level def's.
+- Move test functions to own file.
