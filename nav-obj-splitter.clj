@@ -28,11 +28,8 @@
 (defn make-single-file-name
   "Returns a file name built from object meta data."
   [object-metadata]
-  (let [type-id (:type-id object-metadata)
-        type (:type object-metadata)
-        id (:id object-metadata)
-        file-name (join "-" [type-id, type, id])]
-    (join [file-name ".txt"])))
+  (let [file-name (join "-" (map object-metadata [:type-id :type :id]))]
+    (str file-name ".txt")))
 
 ; Some tests
 (def meta-data-example {:type-id 1 :type "Table" :id "70902" :name "Test Table (48)"})
