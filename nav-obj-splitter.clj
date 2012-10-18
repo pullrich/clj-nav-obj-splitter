@@ -2,18 +2,7 @@
   (:use [clojure.test]
         [clojure.string :only [join]]))
 
-(defn type-id
-  "Returns the NAV specific type id for the object type."
-  [type]
-  (cond
-    (= type "Table") 1
-    (= type "Form") 2
-    (= type "Report") 3
-    (= type "Dataport") 4
-    (= type "Codeunit") 5
-    (= type "XMLport") 6
-    (= type "MenuSuite") 7
-    (= type "Page") 8))
+(def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
 
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
@@ -23,7 +12,7 @@
         type (nth matches 1)
         id (nth matches 2)
         name (nth matches 3)]
-    {:type-id (type-id type) :type type :id id :name name}))
+    {:type-id (type-id-map type) :type type :id id :name name}))
 
 (defn make-single-file-name
   "Returns a file name built from object meta data."
