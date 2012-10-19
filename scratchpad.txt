@@ -1,2 +1,27 @@
 ﻿- Make test fn's not dependend on top level def's.
 - Move test functions to own file.
+
+==========================================================================
+
+(println "hello")
+
+(use 'clojure.clr.io)
+
+(slurp "scratchpad.txt" :encoding "UTF-8")
+
+(spit "blubber.txt" "test")
+
+https://github.com/richhickey/clojure-clr/blob/master/Clojure/Clojure.Source/clojure/clr/io.clj
+http://s477.codeinspot.com/q/2701014
+
+Number 2: how to read a file line by line.
+
+(use 'clojure.java.io) | (use 'clojure.clr.io)
+(with-open [rdr (reader "/tmp/test.txt")]
+  (doseq [line (line-seq rdr)]
+    (println line)))
+
+    
+(with-open [rdr (reader "1-Table-70902 Test Table.txt")]
+  (doseq [line (line-seq rdr)]
+    (println line)))
