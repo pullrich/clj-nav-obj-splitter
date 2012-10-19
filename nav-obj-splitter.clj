@@ -3,12 +3,13 @@
         [clojure.string :only [join]]))
 
 (def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
+(def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
+(def source-file-extension ".txt")
 
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
   [line]
-  (let [first-line-format #"^OBJECT (.+) (\d+) (.+)"
-        matches (re-find (re-pattern first-line-format) line)
+  (let [matches (re-find (re-pattern first-line-regex) line)
         type (nth matches 1)
         id (nth matches 2)
         name (nth matches 3)]
@@ -18,7 +19,7 @@
   "Returns a file name built from object meta data."
   [object-metadata]
   (let [file-name (join "-" (map object-metadata [:type-id :type :id]))]
-    (str file-name ".txt")))
+    (str file-name source-file-extension)))
 
 ; Some tests
 (def meta-data-example {:type-id 1 :type "Table" :id "70902" :name "Test Table (48)"})
