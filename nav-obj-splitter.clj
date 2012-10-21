@@ -1,6 +1,6 @@
 (ns nav.source.split
-  (:use [clojure.test]
-        [clojure.string :only [join]]))
+  (:use [clojure.test])
+  (:require [clojure.string]))
 
 (def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
 (def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
@@ -31,7 +31,7 @@
 (defn make-single-file-name
   "Returns a file name built from object meta data."
   [object-metadata]
-  (let [file-name (join "-" (map object-metadata [:type-id :type :id]))]
+  (let [file-name (clojure.string/join "-" (map object-metadata [:type-id :type :id]))]
     (str file-name source-file-extension)))
     
 (defn save-single-source-file
