@@ -25,3 +25,5 @@ Number 2: how to read a file line by line.
 (with-open [rdr (reader "1-Table-70902 Test Table.txt")]
   (doseq [line (line-seq rdr)]
     (println line)))
+
+http://msdn.microsoft.com/en-us/library/system.text.encoding.aspx
