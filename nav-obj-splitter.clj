@@ -6,6 +6,13 @@
 (def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
 (def source-file-extension ".txt")
 
+;; Read big source file line by line.
+;; Check if line is first line of an NAV object.
+;; If so, than place that line and following lines on a "current object" stack.
+;; Check if the current line read is the "closing" line for the current object.
+;; If so , than place that line on the "stack" and send of the source for this
+;; one object to be parsed and saved in its own file.
+
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
   [line]
@@ -20,6 +27,11 @@
   [object-metadata]
   (let [file-name (join "-" (map object-metadata [:type-id :type :id]))]
     (str file-name source-file-extension)))
+    
+(defn save-single-source-file
+  "Saves the source code of one object in its own file."
+  [source file-name]
+  (spit file-name source))
 
 ; Some tests
 (def meta-data-example {:type-id 1 :type "Table" :id "70902" :name "Test Table (48)"})
