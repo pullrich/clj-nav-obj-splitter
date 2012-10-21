@@ -13,6 +13,12 @@
 ;; If so , than place that line on the "stack" and send of the source for this
 ;; one object to be parsed and saved in its own file.
 
+(defn read-big-source
+  "doc"
+  [file-name]
+  (let [lines (clojure.string/split-lines (slurp file-name :encoding "ibm850"))]
+    lines))
+
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
   [line]
