@@ -4,6 +4,7 @@
 
 (def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
 (def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
+(def last-line-regex #"^}$")
 (def source-file-extension ".txt")
 
 ;; Read big source file line by line.
@@ -13,11 +14,21 @@
 ;; If so , than place that line on the "stack" and send of the source for this
 ;; one object to be parsed and saved in its own file.
 
-(defn read-big-source
+(defn get-big-source-lines
   "doc"
   [file-name]
   (let [lines (clojure.string/split-lines (slurp file-name :encoding "ibm850"))]
     lines))
+
+(defn first-line-of-object-source? [line]
+  (if (re-find first-line-regex line)
+    true
+    false))
+
+(defn last-line-of-object-source? [line]
+  (if (re-find last-line-regex line)
+    true
+    false))
 
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
