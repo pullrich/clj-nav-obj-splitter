@@ -30,6 +30,16 @@
     true
     false))
 
+(defn loop-and-print [lines]
+  (loop [current (first lines)
+         buffer (rest lines)]
+    (if current
+      (do
+        (println current)
+        (recur (first buffer) (rest buffer)))
+      nil)))
+
+    
 (defn parse-first-line
   "Parses meta data from the first line of the object source file."
   [line]

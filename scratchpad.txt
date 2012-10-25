@@ -11,6 +11,12 @@
 
 (spit "blubber.txt" "test")
 
+(line-seq rdr)
+-> lazy seq of lines
+
+(def myvec (conj myvec 1))
+-> add to a vector
+
 https://github.com/richhickey/clojure-clr/blob/master/Clojure/Clojure.Source/clojure/clr/io.clj
 http://s477.codeinspot.com/q/2701014
 
