@@ -8,7 +8,7 @@
 (def source-file-extension ".txt")
 
 ;; Read big source file line by line.
-;; Check if line is first line of an NAV object.
+;; Check if line is first line of an NAV object by testing against a regex.
 ;; If so, than place that line and following lines on a "current object" stack.
 ;; Check if the current line read is the "closing" line for the current object.
 ;; If so , than place that line on the "stack" and send of the source for this
@@ -20,22 +20,31 @@
   (let [lines (clojure.string/split-lines (slurp file-name :encoding "ibm850"))]
     lines))
 
-(defn first-line-of-object-source? [line]
+(defn first-line-of-object-source?
+  "Check if line is first line of an NAV object by testing against a regex."
+  [line]
   (if (re-find first-line-regex line)
     true
     false))
 
-(defn last-line-of-object-source? [line]
+(defn last-line-of-object-source?
+  "Check if line is the \"closing\" line for the a NAV object by testing against a regex."
+  [line]
   (if (re-find last-line-regex line)
     true
     false))
 
+(def current-object-source "")
+    
 (defn loop-and-print [lines]
   (loop [current (first lines)
          buffer (rest lines)]
     (if current
       (do
         (println current)
+        (if (first-line-of-object-source? current)
+          (def current-object-source current)
+          (def current-object-source (clojure.string/join "\n" [current-object-source current])))
         (recur (first buffer) (rest buffer)))
       nil)))
 
