@@ -1,4 +1,4 @@
-(ns nav.source.split
+(ns nav-source
   (:use [clojure.test])
   (:require [clojure.string]))
 
@@ -68,16 +68,3 @@
   "Saves the source code of one object in its own file."
   [source file-name]
   (spit file-name source))
-
-; Some tests
-(def meta-data-example {:type-id 1 :type "Table" :id "70902" :name "Test Table (48)"})
-(def first-line-example "OBJECT Table 70902 Test Table (48)")
-(def meta-data-parsed (parse-first-line first-line-example))
-
-(deftest parsing
-  (is (= meta-data-example meta-data-parsed)))
-
-(deftest new-file-name
-  (is (= "1-Table-70902.txt" (make-single-file-name meta-data-parsed))))
-
-(run-tests 'nav.source.split)
