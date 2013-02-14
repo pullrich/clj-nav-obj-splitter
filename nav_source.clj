@@ -1,6 +1,5 @@
 (ns nav-source
-  (:use [clojure.test])
-  (:require [clojure.string]))
+  (:require [clojure.string :as string]))
 
 (def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
 (def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
@@ -17,7 +16,7 @@
 (defn get-big-source-lines
   "doc"
   [file-name]
-  (let [lines (clojure.string/split-lines (slurp file-name :encoding "ibm850"))]
+  (let [lines (string/split-lines (slurp file-name :encoding "ibm850"))]
     lines))
 
 (defn first-line-of-object-source?
@@ -44,7 +43,7 @@
         (println current)
         (if (first-line-of-object-source? current)
           (def current-object-source current)
-          (def current-object-source (clojure.string/join "\n" [current-object-source current])))
+          (def current-object-source (string/join "\n" [current-object-source current])))
         (recur (first buffer) (rest buffer)))
       nil)))
 
@@ -61,7 +60,7 @@
 (defn make-single-file-name
   "Returns a file name built from object meta data."
   [object-metadata]
-  (let [file-name (clojure.string/join "-" (map object-metadata [:type-id :type :id]))]
+  (let [file-name (string/join "-" (map object-metadata [:type-id :type :id]))]
     (str file-name source-file-extension)))
     
 (defn save-single-source-file
