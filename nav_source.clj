@@ -1,10 +1,12 @@
 (ns nav-source
   (:require [clojure.string :as string]))
 
-(def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
-(def first-line-regex #"^OBJECT (.+) (\d+) (.+)")
-(def last-line-regex #"^}$")
+(def type-id-map           {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
+(def first-line-regex      #"^OBJECT (.+) (\d+) (.+)")
+(def last-line-regex       #"^}$")
 (def source-file-extension ".txt")
+(def min-object-id         1)
+(def max-object-id         20000000000) ; TODO: Check NAV max. Integer value!
 
 ;; Read big source file line by line.
 ;; Check if line is first line of an NAV object by testing against a regex.
@@ -19,15 +21,23 @@
   (let [lines (string/split-lines (slurp file-name :encoding "ibm850"))]
     lines))
 
-(defn first-line-of-object-source?
-  "Check if line is first line of an NAV object by testing against a regex."
+(defn matches-first-line-structure?
+  "Check if line has the structure of a first line of a NAV object by testing against a regex."
   [line]
   (if (re-find first-line-regex line)
     true
     false))
 
-(defn last-line-of-object-source?
-  "Check if line is the \"closing\" line for the a NAV object by testing against a regex."
+(defn valid-first-line-tokens?
+  "doc"
+  [tokens]
+  ; TODO: incomplete!
+  (and 
+    (contains? type-id-map (tokens :type))
+    (>= (long (tokens :id)) min-object-id)))
+
+(defn matches-last-line-structure?
+  "Check if line is the closing line for the a NAV object by testing against a regex."
   [line]
   (if (re-find last-line-regex line)
     true
@@ -41,26 +51,27 @@
     (if current
       (do
         (println current)
-        (if (first-line-of-object-source? current)
+        (if (matches-first-line-structure? current)
           (def current-object-source current)
           (def current-object-source (string/join "\n" [current-object-source current])))
         (recur (first buffer) (rest buffer)))
       nil)))
 
     
-(defn parse-first-line
-  "Parses meta data from the first line of the object source file."
+(defn first-line-tokens
+  "Returns a map of components parsed from the first line of the object source file."
   [line]
   (let [matches (re-find (re-pattern first-line-regex) line)
         type (nth matches 1)
         id (nth matches 2)
         name (nth matches 3)]
-    {:type-id (type-id-map type) :type type :id id :name name}))
+    {:type type :id (read-string id) :name name}))
 
 (defn make-single-file-name
   "Returns a file name built from object meta data."
   [object-metadata]
-  (let [file-name (string/join "-" (map object-metadata [:type-id :type :id]))]
+  (let [object-metadata (assoc object-metadata :type-id (type-id-map (object-metadata :type)))
+        file-name (string/join "-" (map object-metadata [:type-id :type :id]))]
     (str file-name source-file-extension)))
     
 (defn save-single-source-file

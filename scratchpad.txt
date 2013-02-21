@@ -6,6 +6,9 @@
 
 ==========================================================================
 
+(line-seq (clojure.java.io/reader (clojure.java.io/file “data.txt”)))
+
+
 (println "hello")
 
 (use 'clojure.clr.io)
