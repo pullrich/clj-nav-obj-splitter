@@ -33,6 +33,13 @@
   [object-string]
   (contains? type-id-map object-string))
 
+(defn object-id-within-valid-range?
+  "Returns true if object-id is within the allowed range."
+  [object-id]
+  (and
+    (>= object-id object-id-min)
+    (<= object-id object-id-max)))
+
 (defn valid-first-line-tokens?
   "doc"
   [tokens]

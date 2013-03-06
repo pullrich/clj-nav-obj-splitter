@@ -1,7 +1,9 @@
 (ns nav-source-test
   (:use nav-source clojure.test))
 
-(def expected-first-line-tokens {:type "Table" :id 70902 :name "Test Table (48)"})
+(def expected-first-line-tokens {:type "Table" 
+                                 :id 70902 
+                                 :name "Test Table (48)"})
 
 (def lines {:first {
               :valid-structure {
@@ -41,12 +43,21 @@
   (let [tokens (first-line-tokens (get-in lines [:first :valid-structure :valid-tokens]))]
     (is (= expected-first-line-tokens tokens))))
 
+
 ; valid-object-type-string? tests
 (deftest valid-object-type-string?__given-a-valid-object-type-string__should-return-true
   (is (true? (valid-object-type-string? "Table"))))
 
 (deftest valid-object-type-string?__given-an-invalid-object-type-string__should-return-false
   (is (false? (valid-object-type-string? "Bird"))))
+
+
+; object-id-within-valid-range? tests
+(deftest object-id-within-valid-range?__given-a-number-within-valid-range__should-return-true
+  (is (true? (object-id-within-valid-range? object-id-min))))
+
+(deftest object-id-within-valid-range?__given-a-number-outside-the-valid-range__should-return-false
+  (is (false? (object-id-within-valid-range? (+ object-id-max 1)))))
 
 ; valid-first-line-tokens? tests
 (deftest valid-first-line-tokens?__given-a-map-of-valid-first-line-tokens__should-return-true
