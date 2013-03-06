@@ -2,11 +2,11 @@
   (:require [clojure.string :as string]))
 
 (def type-id-map           {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
-(def first-line-regex      #"^OBJECT (.+) (\d+) (.+)")
+(def first-line-regex      #"^OBJECT ([a-zA-Z]+) (\d+) (.+)")
 (def last-line-regex       #"^}$")
 (def source-file-extension ".txt")
-(def min-object-id         1)
-(def max-object-id         20000000000) ; TODO: Check NAV max. Integer value!
+(def object-id-min         1)
+(def object-id-max         20000000000) ; TODO: Check NAV max. Integer value!
 
 ;; Read big source file line by line.
 ;; Check if line is first line of an NAV object by testing against a regex.
@@ -34,7 +34,7 @@
   ; TODO: incomplete!
   (and 
     (contains? type-id-map (tokens :type))
-    (>= (long (tokens :id)) min-object-id)))
+    (>= (long (tokens :id)) object-id-min)))
 
 (defn matches-last-line-structure?
   "Check if line is the closing line for the a NAV object by testing against a regex."
@@ -59,7 +59,7 @@
 
     
 (defn first-line-tokens
-  "Returns a map of components parsed from the first line of the object source file."
+  "Returns a map of tokens parsed from the first line of the object source file."
   [line]
   (let [matches (re-find (re-pattern first-line-regex) line)
         type (nth matches 1)

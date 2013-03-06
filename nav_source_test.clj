@@ -36,19 +36,20 @@
   (is (false? (matches-last-line-structure? (get-in lines [:last :invalid])))))
 
 
-
-(deftest valid-first-line-tokens?__given-a-map-of-valid-first-line-tokens__should-return-true
-  (is (true? (valid-first-line-tokens? expected-first-line-tokens))))
-
-
-
+; first-line-tokens tests
 (deftest first-line-tokens__given-a-string-of-valid-structure__should-return-a-map-with-tokens
   (let [tokens (first-line-tokens (get-in lines [:first :valid-structure :valid-tokens]))]
     (is (= expected-first-line-tokens tokens))))
 
 
+; valid-first-line-tokens? tests
+(deftest valid-first-line-tokens?__given-a-map-of-valid-first-line-tokens__should-return-true
+  (is (true? (valid-first-line-tokens? expected-first-line-tokens))))
 
+
+; make-single-file-name tests
 (deftest make-single-file-name__given-a-valid-map-of-first-line-tokens__should-return-a-string-for-a-uniquely-identifiable-filename
   (is (= "1-Table-70902.txt" (make-single-file-name (first-line-tokens (get-in lines [:first :valid-structure :valid-tokens]))))))
+
 
 (run-tests 'nav-source-test)
