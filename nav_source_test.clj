@@ -41,6 +41,12 @@
   (let [tokens (first-line-tokens (get-in lines [:first :valid-structure :valid-tokens]))]
     (is (= expected-first-line-tokens tokens))))
 
+; valid-object-type-string? tests
+(deftest valid-object-type-string?__given-a-valid-object-type-string__should-return-true
+  (is (true? (valid-object-type-string? "Table"))))
+
+(deftest valid-object-type-string?__given-an-invalid-object-type-string__should-return-false
+  (is (false? (valid-object-type-string? "Bird"))))
 
 ; valid-first-line-tokens? tests
 (deftest valid-first-line-tokens?__given-a-map-of-valid-first-line-tokens__should-return-true

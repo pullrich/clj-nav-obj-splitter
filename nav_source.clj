@@ -28,6 +28,11 @@
     true
     false))
 
+(defn valid-object-type-string?
+  "Returns true if string is of a known object type."
+  [object-string]
+  (contains? type-id-map object-string))
+
 (defn valid-first-line-tokens?
   "doc"
   [tokens]
