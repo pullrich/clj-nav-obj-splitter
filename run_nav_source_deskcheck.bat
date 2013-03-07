@@ -1,0 +1,1 @@
+java -cp .;"C:\Program Files (x86)\clojure-1.4.0\clojure-1.4.0.jar" clojure.main nav_source_deskcheck.clj
