@@ -4,6 +4,7 @@
 (def nav-source-file-encoding "ibm850")
 (def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
 (def first-line-regex #"^OBJECT ([a-zA-Z]+) (\d+) (.+)")
+(def first-line-pattern (re-pattern first-line-regex))
 (def last-line-regex #"^}$")
 (def source-file-extension ".txt")
 (def object-id-min 1)
@@ -16,12 +17,7 @@
 ;; If so , than place that line on the "stack" and send of the source for this
 ;; one object to be parsed and saved in its own file.
 
-(defn get-big-source-lines
-  "doc"
-  [file-name]
-  (let [content (slurp file-name :encoding nav-source-file-encoding)
-        lines (string/split-lines content)]
-    lines))
+;;; FIRST LINE CHECKS
 
 (defn matches-first-line-structure?
   "Check if line has the structure of a first line of a NAV object by testing against a regex."
@@ -29,6 +25,15 @@
   (if (re-find first-line-regex line)
     true
     false))
+
+(defn first-line-tokens
+  "Returns a map of tokens parsed from the first line of the object source file."
+  [line]
+  (let [matches (re-find first-line-pattern line)
+        type (nth matches 1)
+        id (nth matches 2)
+        name (nth matches 3)]
+    {:type type :id (read-string id) :name name}))
 
 (defn valid-object-type-string?
   "Returns true if string is of a known object type."
@@ -45,10 +50,11 @@
 (defn valid-first-line-tokens?
   "Returns true if the tokens match their constraints."
   [tokens]
-  ; TODO: incomplete!
   (and 
     (valid-object-type-string? (tokens :type))
     (object-id-within-valid-range? (tokens :id))))
+
+;;; LAST LINE CHECKS
 
 (defn matches-last-line-structure?
   "Check if line is the closing line for the a NAV object by testing against a regex."
@@ -57,8 +63,15 @@
     true
     false))
 
-(def current-object-source "")
-    
+;;; NAV SOURCE FILE HANDLING
+
+(defn get-big-source-lines
+  "doc"
+  [file-name]
+  (let [content (slurp file-name :encoding nav-source-file-encoding)
+        lines (string/split-lines content)]
+    lines))
+
 (defn loop-and-print [lines]
   (loop [current (first lines)
          buffer (rest lines)]
@@ -70,16 +83,6 @@
           (def current-object-source (string/join "\n" [current-object-source current])))
         (recur (first buffer) (rest buffer)))
       nil)))
-
-    
-(defn first-line-tokens
-  "Returns a map of tokens parsed from the first line of the object source file."
-  [line]
-  (let [matches (re-find (re-pattern first-line-regex) line)
-        type (nth matches 1)
-        id (nth matches 2)
-        name (nth matches 3)]
-    {:type type :id (read-string id) :name name}))
 
 (defn make-single-file-name
   "Returns a file name built from object meta data."

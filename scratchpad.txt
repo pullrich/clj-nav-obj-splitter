@@ -1,8 +1,4 @@
-﻿- Make test fn's not dependend on top level def's.
-- Rename first-line-of-object-source? to reflect that it just checks the structure?
-  ("OBJECT Bird 70902 Test Table (48)" - see "Bird" does not cause a failure!)
-  Should it check more than just the structure? What about the "parse" function?
-  Should there be an higher-level-caller combining those two?
+﻿
 
 ==========================================================================
 
