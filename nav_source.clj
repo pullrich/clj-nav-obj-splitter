@@ -1,12 +1,13 @@
 (ns nav-source
   (:require [clojure.string :as string]))
 
-(def type-id-map           {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
-(def first-line-regex      #"^OBJECT ([a-zA-Z]+) (\d+) (.+)")
-(def last-line-regex       #"^}$")
+(def nav-source-file-encoding "ibm850")
+(def type-id-map {"Table" 1 "Form" 2 "Report" 3 "Dataport" 4 "Codeunit" 5 "XMLport" 6 "MenuSuite" 7 "Page" 8})
+(def first-line-regex #"^OBJECT ([a-zA-Z]+) (\d+) (.+)")
+(def last-line-regex #"^}$")
 (def source-file-extension ".txt")
-(def object-id-min         1)
-(def object-id-max         20000000000) ; TODO: Check NAV max. Integer value!
+(def object-id-min 1)
+(def object-id-max 20000000000) ; TODO: Check NAV max. Integer value!
 
 ;; Read big source file line by line.
 ;; Check if line is first line of an NAV object by testing against a regex.
@@ -18,7 +19,8 @@
 (defn get-big-source-lines
   "doc"
   [file-name]
-  (let [lines (string/split-lines (slurp file-name :encoding "ibm850"))]
+  (let [content (slurp file-name :encoding nav-source-file-encoding)
+        lines (string/split-lines content)]
     lines))
 
 (defn matches-first-line-structure?
@@ -41,12 +43,12 @@
     (<= object-id object-id-max)))
 
 (defn valid-first-line-tokens?
-  "doc"
+  "Returns true if the tokens match their constraints."
   [tokens]
   ; TODO: incomplete!
   (and 
-    (contains? type-id-map (tokens :type))
-    (>= (long (tokens :id)) object-id-min)))
+    (valid-object-type-string? (tokens :type))
+    (object-id-within-valid-range? (tokens :id))))
 
 (defn matches-last-line-structure?
   "Check if line is the closing line for the a NAV object by testing against a regex."
